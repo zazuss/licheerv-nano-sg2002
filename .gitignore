@@ -1,0 +1,22 @@
+# OS
+Thumbs.db
+.DS_Store
+
+# Exclude entire large reference repos (1GB+ total)
+docs/sipeed-wiki/
+sdks/sophon-demo/
+sdks/tpu-mlir/
+tools/sophon-tools/
+
+# Large files
+*.bin
+*.pdf
+*.img
+*.zip
+*.tar.gz
+*.7z
+*.rar
+*.so
+*.ko
+*.pyd
+*.cvimodel
