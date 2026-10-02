@@ -1,0 +1,13 @@
+#!/bin/sh
+case "${1:-start}" in
+  start)
+    if [ -s /var/run/codex-voice.pid ] && kill -0 "$(cat /var/run/codex-voice.pid)" 2>/dev/null; then exit 0; fi
+    cd /root/codex-remote || exit 1
+    nohup python3 board_client.py --user-key-voice >/var/log/codex-user-key-voice.log 2>&1 &
+    echo $! >/var/run/codex-voice.pid
+    ;;
+  stop)
+    [ -s /var/run/codex-voice.pid ] && kill "$(cat /var/run/codex-voice.pid)" 2>/dev/null || true
+    rm -f /var/run/codex-voice.pid
+    ;;
+esac

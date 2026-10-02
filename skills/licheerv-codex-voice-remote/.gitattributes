@@ -1,0 +1,8 @@
+*.md text eol=lf
+*.py text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+*.ps1 text eol=lf
+*.yaml text eol=lf
+assets/bridge-template/board_tools/* text eol=lf
+.gitignore text eol=lf

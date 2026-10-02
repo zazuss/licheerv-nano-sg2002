@@ -86,3 +86,7 @@ TPU-MLIR 编译器，用于：
 | Python | 3.11.6 |
 | OpenCV | 4.8 |
 | 驱动状态 | 全部 soph_*.ko 已加载，外设节点齐全，无缺口 |
+
+## Codex 语音遥控技能
+
+[荔枝派 USER 键 → PC 本地 SenseVoice → Codex 的完整通信技能](skills/licheerv-codex-voice-remote/SKILL.md) 包含部署模板、板端服务、连接协议和故障排查。模板不包含令牌、录音或模型文件。

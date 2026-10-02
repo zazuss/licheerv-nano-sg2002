@@ -1,0 +1,16 @@
+# Secrets and machine-specific settings
+assets/bridge-template/pc_config.json
+assets/bridge-template/board_config.json
+
+# Downloaded models, CUDA runtime and recorded audio
+assets/bridge-template/models/
+assets/bridge-template/cuda_runtime/
+assets/bridge-template/*.7z
+assets/bridge-template/*.wav
+assets/bridge-template/*.log
+
+# Python and editor artifacts
+__pycache__/
+*.pyc
+.venv/
+assets/bridge-template/reachy_config.json

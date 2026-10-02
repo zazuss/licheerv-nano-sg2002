@@ -1,0 +1,47 @@
+{
+  "listen_host": "0.0.0.0",
+  "port": 8765,
+  "token": "CHANGE_ME_TO_A_LONG_RANDOM_TOKEN",
+  "sensevoice_threads": 4,
+  "button_labels": {
+    "approve": [
+      "Allow once",
+      "Approve once",
+      "允许一次",
+      "批准一次",
+      "Allow",
+      "Approve",
+      "同意",
+      "批准"
+    ],
+    "deny": [
+      "Deny",
+      "Reject",
+      "拒绝",
+      "不允许"
+    ],
+    "send": [
+      "Send",
+      "发送",
+      "Start",
+      "开始"
+    ],
+    "stop": [
+      "Stop",
+      "停止",
+      "Interrupt",
+      "中断"
+    ]
+  },
+  "composer_labels": [
+    "message",
+    "prompt",
+    "ask",
+    "输入",
+    "提问",
+    "发送消息"
+  ],
+  "send_shortcut": "{ENTER}",
+  "reachy_bridge_url": "",
+  "reachy_bridge_token": ""
+}

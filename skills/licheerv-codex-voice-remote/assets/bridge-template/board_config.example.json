@@ -1,0 +1,16 @@
+{
+  "server_url": "http://192.168.1.100:8765",
+  "token": "PASTE_THE_TOKEN_FROM_PC_CONFIG_HERE",
+  "audio_device": "hw:0,0",
+  "audio_mixer_device": "hw:0",
+  "audio_rate": 48000,
+  "capture_volume": 16,
+  "max_record_seconds": 20,
+  "user_key_event": "/dev/input/event0",
+  "user_key_code": 431,
+  "gpio": {
+    "approve": null,
+    "deny": null,
+    "talk": null
+  }
+}
