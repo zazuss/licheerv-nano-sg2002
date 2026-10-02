@@ -15,6 +15,7 @@ The asset template contains only examples and source. Do not package live JSON c
 3. Keep pc_config.json private. Verify listen_host and port. Port 8765 should be reachable from the board on a trusted USB or local network.
 4. Start start_pc.ps1. Keep Codex Desktop open with a composer available.
 5. Check http://127.0.0.1:8765/health from the PC. If PowerShell routes localhost through a proxy, use Invoke-WebRequest with -Proxy $null.
+6. To start the PC receiver automatically after the user signs in, run register_pc_autostart.ps1 once. The logon task runs start_pc_auto.ps1, which checks /health before launching a hidden receiver and writes logs to pc_server.auto.log and pc_server.auto.err.log. UI automation still needs an interactive desktop session with Codex open.
 
 On the known USB NCM connection, the PC has 10.233.141.100 and the board has 10.233.141.1. These are examples. Use ipconfig on Windows and ip addr on the board to discover current addresses. For Wi-Fi use the PC's reachable LAN address and verify client isolation is off.
 
@@ -25,6 +26,7 @@ On the known USB NCM connection, the PC has 10.233.141.100 and the board has 10.
 3. From the board, request the PC /health endpoint. Run board_client.py --user-key-voice manually first.
 4. Hold USER while speaking for at least 0.2 second and release. Check the PC panel at http://127.0.0.1:8765/ or the local /api/state endpoint. Confirm receipt, transcription, and Codex insertion.
 5. After a manual success, install S99-codex-voice in /etc/init.d, make it executable, and start it. The service writes /var/log/codex-user-key-voice.log. It supports start and stop; use stop followed by start when a restart is needed.
+6. Reboot the board once to confirm that rcS starts S99-codex-voice automatically. Verify the board_client.py --user-key-voice process and the first log line announcing USER-key listening. If the board is powered by the PC USB connection, plugging it in triggers this normal boot path.
 
 The template also supports three optional external GPIO controls in the non-USER mode. Do not enable them until the exact pinmux and GPIO numbers have been verified on the hardware.
 
