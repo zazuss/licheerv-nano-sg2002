@@ -42,5 +42,5 @@ The template also supports three optional external GPIO controls in the non-USER
 2. Board route: confirm the board can reach the PC address in board_config.json. Check /var/log/codex-user-key-voice.log for upload response. A 401 means authentication mismatch; a 400 can indicate malformed WAV or missing event ID.
 3. Capture: verify arecord -l, ALSA device, capture volume, and a short local WAV. A recording under 0.2 second is rejected by design.
 4. ASR: check that the SenseVoice ONNX model and tokens.txt exist and the PC event panel reports transcription.
-5. Codex insertion: if transcription exists but no text appears, bring the intended Codex Desktop window forward, close extra windows, and run inspect_codex_ui.py to inspect labels. Adjust button_labels or composer_labels only from observed UI evidence.
+5. Codex insertion: if transcription exists but no text appears, bring the intended Codex Desktop window forward, close extra windows, and run inspect_codex_ui.py to inspect labels. The current adapter prefers a unique visible ProseMirror editor so a search box does not become a second composer candidate. If the UI changes again, inspect its control class and labels before adjusting selection logic or composer_labels.
 6. Optional Reachy: timeouts to port 8766 do not imply voice failure. Use references/reachy.md only if robot interaction is in scope.

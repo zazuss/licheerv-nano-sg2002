@@ -137,6 +137,46 @@ class BridgeTest(unittest.TestCase):
         composer.click_input.assert_called_once_with()
         send_keys.assert_called_once_with("{ENTER}")
         find_button.assert_called_once_with(window, ["Send"])
+
+    def test_composer_prefers_unique_prosemirror_over_other_edit(self):
+        adapter = CodexDesktop({
+            "button_labels": {}, "composer_labels": ["message", "ask"],
+        })
+        search = Mock()
+        search.is_visible.return_value = True
+        search.is_enabled.return_value = True
+        search.element_info.class_name = "SearchBox"
+        search.element_info.name = "Ask search"
+        composer = Mock()
+        composer.is_visible.return_value = True
+        composer.is_enabled.return_value = True
+        composer.element_info.class_name = "ProseMirror ProseMirror-focused"
+        composer.element_info.name = "使用 ChatGPT Work"
+        window = Mock()
+        window.descendants.return_value = [search, composer]
+
+        self.assertIs(adapter._composer(window), composer)
+
+    def test_composer_retries_transient_duplicate(self):
+        adapter = CodexDesktop({"button_labels": {}, "composer_labels": []})
+        composer = Mock()
+        composer.is_visible.return_value = True
+        composer.is_enabled.return_value = True
+        composer.element_info.class_name = "ProseMirror"
+        composer.element_info.name = "使用 ChatGPT Work"
+        duplicate = Mock()
+        duplicate.is_visible.return_value = True
+        duplicate.is_enabled.return_value = True
+        duplicate.element_info.class_name = "ProseMirror"
+        duplicate.element_info.name = "使用 ChatGPT Work"
+        window = Mock()
+        window.descendants.side_effect = [[composer, duplicate], [composer]]
+
+        with patch("codex_desktop.time.sleep") as sleep:
+            self.assertIs(adapter._composer(window), composer)
+        sleep.assert_called_once_with(0.2)
+
+
     def test_board_sender_to_pc_receiver(self):
         sender = Sender({"server_url": self.base, "token": self.state.config["token"]})
         sender.send("/event", b'{"button":"deny"}', "application/json")

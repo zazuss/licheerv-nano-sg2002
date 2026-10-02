@@ -111,15 +111,38 @@ class CodexDesktop:
         return None, None
 
     def _composer(self, window):
-        edits = [e for e in window.descendants(control_type="Edit") if self._visible_enabled(e)]
-        named = [
-            e for e in edits
-            if any(label in e.element_info.name.casefold() for label in self.composer_labels)
-        ]
-        candidates = named if named else edits
-        if len(candidates) != 1:
-            raise RuntimeError(f"找到 {len(candidates)} 个候选输入框")
-        return candidates[0]
+        for attempt in range(3):
+            edits = [e for e in window.descendants(control_type="Edit") if self._visible_enabled(e)]
+            # Codex's message editor is a ProseMirror control. Other visible
+            # Edit controls (for example search) can appear in the same window.
+            prose_mirror = [
+                e for e in edits
+                if "prosemirror" in (e.element_info.class_name or "").casefold()
+            ]
+            if len(prose_mirror) == 1:
+                return prose_mirror[0]
+            if len(prose_mirror) > 1:
+                labels = self.composer_labels + ["使用 chatgpt work", "use chatgpt work"]
+                named = [
+                    e for e in prose_mirror
+                    if any(label in e.element_info.name.casefold() for label in labels)
+                ]
+                if len(named) == 1:
+                    return named[0]
+                count = len(prose_mirror)
+                error = f"找到 {count} 个 Codex 输入框"
+            else:
+                named = [
+                    e for e in edits
+                    if any(label in e.element_info.name.casefold() for label in self.composer_labels)
+                ]
+                candidates = named if named else edits
+                if len(candidates) == 1:
+                    return candidates[0]
+                error = f"找到 {len(candidates)} 个候选输入框"
+            if attempt < 2:
+                time.sleep(0.2)
+        raise RuntimeError(error)
 
     def handle_button(self, kind: str) -> str:
         try:
