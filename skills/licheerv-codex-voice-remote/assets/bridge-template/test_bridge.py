@@ -128,7 +128,6 @@ class BridgeTest(unittest.TestCase):
         window = Mock()
         with patch("codex_desktop.com_context", return_value=nullcontext()), \
              patch.object(adapter, "_voice_window", return_value=window), \
-             patch.object(adapter, "_find_button", return_value=(None, None)) as find_button, \
              patch.object(adapter, "_composer", return_value=composer), \
              patch("pywinauto.keyboard.send_keys") as send_keys:
             result = adapter.send_current_input()
@@ -136,7 +135,6 @@ class BridgeTest(unittest.TestCase):
         self.assertEqual(result, "已从 Codex 输入框提交消息；未停止当前任务")
         composer.click_input.assert_called_once_with()
         send_keys.assert_called_once_with("{ENTER}")
-        find_button.assert_called_once_with(window, ["Send"])
 
     def test_composer_prefers_unique_prosemirror_over_other_edit(self):
         adapter = CodexDesktop({
@@ -175,6 +173,23 @@ class BridgeTest(unittest.TestCase):
         with patch("codex_desktop.time.sleep") as sleep:
             self.assertIs(adapter._composer(window), composer)
         sleep.assert_called_once_with(0.2)
+
+    def test_composer_prefers_question_reply_over_general_work_input(self):
+        adapter = CodexDesktop({"button_labels": {}, "composer_labels": ["ask"]})
+        reply = Mock()
+        reply.is_visible.return_value = True
+        reply.is_enabled.return_value = True
+        reply.element_info.class_name = "ProseMirror"
+        reply.element_info.name = "回复…"
+        general = Mock()
+        general.is_visible.return_value = True
+        general.is_enabled.return_value = True
+        general.element_info.class_name = "ProseMirror"
+        general.element_info.name = "使用 ChatGPT Work"
+        window = Mock()
+        window.descendants.return_value = [reply, general]
+
+        self.assertIs(adapter._composer(window), reply)
 
 
     def test_board_sender_to_pc_receiver(self):

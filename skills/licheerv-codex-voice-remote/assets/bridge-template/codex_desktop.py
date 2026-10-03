@@ -122,6 +122,14 @@ class CodexDesktop:
             if len(prose_mirror) == 1:
                 return prose_mirror[0]
             if len(prose_mirror) > 1:
+                # A question can have its own Reply editor above the general
+                # ChatGPT Work composer. Dictation belongs in that reply.
+                reply = [
+                    e for e in prose_mirror
+                    if e.element_info.name.strip().casefold().startswith(("回复", "reply"))
+                ]
+                if len(reply) == 1:
+                    return reply[0]
                 labels = self.composer_labels + ["使用 chatgpt work", "use chatgpt work"]
                 named = [
                     e for e in prose_mirror
@@ -198,15 +206,9 @@ class CodexDesktop:
 
             with com_context():
                 window = self._voice_window()
-                button, name = self._find_button(window, self.labels["send"])
-                if button is not None:
-                    button.click_input()
-                    return f"已点击 Codex 的 {name} 按钮"
-
-                # While Codex is working the composer action commonly reads Stop,
-                # so it must never be used as a substitute for Send. Submitting
-                # from the focused composer keeps the follow-up as a queued or
-                # steering message according to Codex's current conversation mode.
+                # Focus the same editor used for dictated text. A visible Send
+                # button may belong to the general Work composer instead of the
+                # question's Reply editor.
                 composer = self._composer(window)
                 composer.click_input()
                 send_keys(self.send_shortcut)
